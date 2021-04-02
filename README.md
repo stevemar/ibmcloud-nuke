@@ -1,6 +1,6 @@
 # ibmcloud-nuke
 
-The goal of this project is to delete all resources in your IBM Cloud account, _with great conviction and impunity_. :smile:
+The goal of this project is to delete all resources in your IBM Cloud account, _with great conviction and impunity_. 😠 (To save you from charges) 💰
 
 The project itself is just a shell script that is required be run by an authenticated IBM Cloud user. The shell script will find and delete the following resources:
 
@@ -20,8 +20,8 @@ The project itself is just a shell script that is required be run by an authenti
 
 3. The project still needs support for deleting the following types of resources
 
-* Cloud Functions namespaces/actions/triggers
-* Schematics
-* Satellite locations
-* Developer Tools (toolchains)
-* VMware solutions
+   * Cloud Functions namespaces/actions/triggers
+   * Schematics
+   * Satellite locations
+   * Developer Tools (toolchains)
+   * VMware solutions

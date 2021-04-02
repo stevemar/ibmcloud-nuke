@@ -25,3 +25,7 @@ The project itself is just a shell script that is required be run by an authenti
    * Satellite locations
    * Developer Tools (toolchains)
    * VMware solutions
+   * Investigate COS deletion
+   * [Reclamations](https://cloud.ibm.com/docs/account?topic=account-resource-reclamation)
+   * API keys
+   * ... more IAM/accont bits

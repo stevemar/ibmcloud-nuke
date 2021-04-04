@@ -44,7 +44,7 @@ ibmcloud resource service-instances | tail -n+4 | awk -F '  +' '{print $1}' | wh
 done
 
 # baremetal
-echo "Deleting baremetal: "
+echo "Deleting Classic baremetal: "
 ibmcloud sl hardware list | grep -v 'kube-' | tail -n+2 | while read -r id rest_of_cmd ; do
     echo "${id}"
     # if not dry run
@@ -52,7 +52,7 @@ ibmcloud sl hardware list | grep -v 'kube-' | tail -n+2 | while read -r id rest_
 done
 
 # VMs
-echo "Deleting VMs: "
+echo "Deleting Classic VMs: "
 ibmcloud sl vs list | grep -v 'kube-' | tail -n+2 | while read -r id rest_of_cmd ; do
     echo "${id}"
     # if not dry run
@@ -67,5 +67,10 @@ ibmcloud ce project list | tail -n+5 | while read -r name rest_of_cmd ; do
         # ibmcloud ce project delete -f --name ${name}
 done
 
-# functions - TBD
-# ibmcloud fn list | tail -n+2
+# functions - use awk because namespaces can have spaces
+echo "Deleting functions: "
+ibmcloud fn namespace list | tail -n+3 | awk -F '  +' '{print $1}' | while read -r name; do
+    echo "${name}"
+    # if not dry run
+        # ibmcloud fn namespace delete "${name}"
+done

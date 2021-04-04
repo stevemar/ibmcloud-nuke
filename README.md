@@ -8,9 +8,10 @@ The project itself is just a shell script that is required be run by an authenti
 * Container Registry namespaces
 * Applications (Cloud Foundry or Stater Kits)
 * Services (like Cloudant, Watson services, Object Storage (and their underlying buckets), etc)
-* Baremetal servers
-* Virtual servers
+* Classic Baremetal servers
+* Classic Virtual servers
 * Code Engine projects (and their underlying jobs)
+* Cloud Functions Namespaces (and their underlying actions)
 
 ## TODO
 
@@ -20,7 +21,6 @@ The project itself is just a shell script that is required be run by an authenti
 
 3. The project still needs support for deleting the following types of resources
 
-   * Cloud Functions namespaces/actions/triggers
    * Schematics
    * Satellite locations
    * Developer Tools (toolchains)

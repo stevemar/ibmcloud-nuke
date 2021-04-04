@@ -7,7 +7,7 @@ The project itself is just a shell script that is required be run by an authenti
 * Kubernetes and OpenShift clusters
 * Container Registry namespaces
 * Applications (Cloud Foundry or Stater Kits)
-* Services (like Cloudant, Watson Discovery, etc)
+* Services (like Cloudant, Watson services, Object Storage (and their underlying buckets), etc)
 * Baremetal servers
 * Virtual servers
 * Code Engine projects (and their underlying jobs)
@@ -25,7 +25,6 @@ The project itself is just a shell script that is required be run by an authenti
    * Satellite locations
    * Developer Tools (toolchains)
    * VMware solutions
-   * Investigate COS deletion
    * [Reclamations](https://cloud.ibm.com/docs/account?topic=account-resource-reclamation)
    * API keys
-   * ... more IAM/accont bits
+   * ... more IAM/account bits

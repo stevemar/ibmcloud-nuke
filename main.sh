@@ -44,12 +44,18 @@ while getopts "dc:" o; do
     esac
 done
 
-# if [ "$CONFIG_FILE" ]; then
-#   echo "Attempting to use config file at location: $CONFIG_FILE"
-# else
-#   CONFIG_FILE='.ibmcloud-nuke'
-#   echo "Attempting to use config file at default location: $CONFIG_FILE"
-# fi
+if [ "$CONFIG_FILE" ]; then
+    echo "Attempting to use config file at location: $CONFIG_FILE"
+    # Ensure config file exists
+    if ! test -f ${CONFIG_FILE};
+    then
+        echo "specified config file ${CONFIG_FILE} not found"
+        exit 1
+    fi
+else
+    CONFIG_FILE='.ibmcloud-nuke'
+    echo "Attempting to use config file at default location: $CONFIG_FILE"
+fi
 
 if [ "${DRY_RUN}" ]; then
     echo "Dry run flag (-d) found. Will NOT delete any resources."
@@ -61,8 +67,17 @@ fi
 
 echo "================================="
 echo "DRY_RUN = ${DRY_RUN}"
-# echo "CONFIG_FILE = ${CONFIG_FILE}"
+echo "CONFIG_FILE = ${CONFIG_FILE}"
 echo "================================="
+
+# Usage: get_or_create_user <name_or_id>
+function check_config_file() {
+    if test -f ${CONFIG_FILE} && grep -Fxq "${1}" ${CONFIG_FILE}
+    then
+        echo "skipping ${name} as it exists in ${CONFIG_FILE}"
+        continue
+    fi
+}
 
 # clusters
 echo "================================="
@@ -70,9 +85,12 @@ echo "Clusters: "
 echo "================================="
 ibmcloud ks clusters -q | tail -n+2 | while read -r name rest_of_cmd ; do
     echo "${name}"
+    check_config_file "${name}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud ks cluster rm -f -c ${name}
     fi
+
 done
 
 # namespaces
@@ -81,6 +99,8 @@ echo "Container Registry (namespaces): "
 echo "================================="
 ibmcloud cr namespaces | tail -n+4 | while read -r name rest_of_cmd ; do
     echo "${name}"
+    check_config_file "${name}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud cr namespace-rm -f ${name}
     fi
@@ -92,6 +112,8 @@ echo "Applications: "
 echo "================================="
 ibmcloud dev list | tail -n+8 | while read -r name rest_of_cmd ; do
     echo "${name}"
+    check_config_file "${name}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud dev delete -f ${name}
     fi
@@ -103,6 +125,8 @@ echo "Services: "
 echo "================================="
 ibmcloud resource service-instances | tail -n+4 | awk -F '  +' '{print $1}' | while read -r name; do
     echo "${name}"
+    check_config_file "${name}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud resource service-instance-delete -f --recursive "${name}"
     fi
@@ -114,6 +138,8 @@ echo "Classic Baremetal: "
 echo "================================="
 ibmcloud sl hardware list | grep -v 'kube-' | tail -n+2 | while read -r id rest_of_cmd ; do
     echo "${id}"
+    check_config_file "${id}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud sl hardware cancel -f ${id}
     fi
@@ -125,6 +151,8 @@ echo "Classic VMs: "
 echo "================================="
 ibmcloud sl vs list | grep -v 'kube-' | tail -n+2 | while read -r id rest_of_cmd ; do
     echo "${id}"
+    check_config_file "${id}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud sl vs cancel -f ${id}
     fi
@@ -136,6 +164,8 @@ echo "Code Engine (Projects):"
 echo "================================="
 ibmcloud ce project list | tail -n+5 | while read -r name rest_of_cmd ; do
     echo "${name}"
+    check_config_file "${name}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud ce project delete -f --name ${name}
     fi
@@ -147,6 +177,8 @@ echo "Cloud Functions (namespaces): "
 echo "================================="
 ibmcloud fn namespace list | tail -n+3 | awk -F '  +' '{print $1}' | while read -r name; do
     echo "${name}"
+    check_config_file "${name}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud fn namespace delete "${name}"
     fi
@@ -158,6 +190,8 @@ echo "Satellite locations: "
 echo "================================="
 ibmcloud sat location ls | tail -n+4 | while read -r name rest_of_cmd; do
     echo "${name}"
+    check_config_file "${name}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud sat location rm --location "${name}" -f
     fi
@@ -169,6 +203,8 @@ echo "Virtual Private Clouds: "
 echo "================================="
 ibmcloud is vpcs | tail -n+3 | while read -r id rest_of_cmd; do
     echo "${id}"
+    check_config_file "${id}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud is vpcd "${id}" -f
     fi
@@ -180,8 +216,9 @@ echo "API Keys: "
 echo "================================="
 ibmcloud iam api-keys | tail -n+4 | grep -v 'Do not delete' | while read -r name rest_of_cmd; do
     echo "${name}"
+    check_config_file "${name}"
+
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud iam api-key-delete ${name}
     fi
 done
-

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.6
+
+* Add support to preserve resources in a config file. By default the script will read from `.ibmcloud-nuke`.
+* Override the config file path by using `-c`.
+
 ## 0.0.5
 
 * Add a `-d` flag for dry runs

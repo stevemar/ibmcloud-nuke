@@ -19,11 +19,11 @@ The project itself is just a shell script that is required be run by an authenti
 ## CLI options
 
 ```bash
-main.sh [-d]
+main.sh [-d] [-c <path-to-config-file>]
 ```
 
 * `-d`: Add this flag to make the command have a dry-run. No resources will be deleted.
-<!-- * `-c`: Specify a config file for IDs/names of resources to be saved from deletion. The tool will automatically look for a file called `ibmcloud-nuke` in the local directory. -->
+* `-c`: Specify a config file for IDs/names of resources to be saved from deletion. The tool will automatically look for a file called `ibmcloud-nuke` in the local directory.
 
 ## Using the CLI
 
@@ -47,17 +47,21 @@ main.sh [-d]
    ./main.sh -d
    ```
 
-   Delete all resources:
+   Delete all resources (will skip over any resorces found in `.ibmcloud-nuke`):
 
    ```bash
    ./main.sh
    ```
 
+   Delete all resources but skip resources list in `myfile.txt`:
+
+   ```bash
+   ./main.sh -c myfile.txt
+   ```
+
 ## TODO
 
-1. Support for a list of exemptions. Ideally this would be in the form of a config file (`ibmcloud-nuke`) that has a bunch of ids/names that will be saved from deletion.
-
-2. The project needs support for deleting the following types of resources:
+1. The project needs support for deleting the following types of resources:
 
    * [Schematics Workspaces](https://cloud.ibm.com/docs/schematics?topic=schematics-schematics-cli-reference#schematics-workspace-delete)
    * [Developer Tools (toolchains)](https://cloud.ibm.com/docs/cli?topic=cli-idt-cli#toolchains)

@@ -19,11 +19,11 @@ The project itself is just a shell script that is required be run by an authenti
 ## CLI options
 
 ```bash
-main.sh [-d] [-c <config-file>]
+main.sh [-d]
 ```
 
 * `-d`: Add this flag to make the command have a dry-run. No resources will be deleted.
-* `-c`: Specify a config file for IDs/names of resources to be saved from deletion. The tool will automatically look for a file called `ibmcloud-nuke` in the local directory.
+<!-- * `-c`: Specify a config file for IDs/names of resources to be saved from deletion. The tool will automatically look for a file called `ibmcloud-nuke` in the local directory. -->
 
 ## Using the CLI
 

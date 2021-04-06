@@ -24,6 +24,7 @@ The project itself is just a shell script that is required be run by an authenti
    * Schematics
    * Satellite locations
    * Developer Tools (toolchains)
+   * Gen2 VPC
    * VMware solutions
    * [Reclamations](https://cloud.ibm.com/docs/account?topic=account-resource-reclamation)
    * API keys

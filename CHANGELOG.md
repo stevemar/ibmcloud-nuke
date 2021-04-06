@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.0.5
+
+* Add a `-d` flag for dry runs
+* Delete Satellite locations
+* Delete VPCs
+
+## 0.0.4
+
+* Delete API keys
+
 ## 0.0.3
 
 * Delete cloud function namespaces

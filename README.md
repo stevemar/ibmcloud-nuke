@@ -12,20 +12,54 @@ The project itself is just a shell script that is required be run by an authenti
 * Classic Virtual servers
 * Code Engine projects (and their underlying jobs)
 * Cloud Functions Namespaces (and their underlying actions)
+* API keys (excluding ones requires for managing Kubernetes clusters)
+* Satellite locations
+* Gen2 VPCs
+
+## CLI options
+
+```bash
+main.sh [-d] [-c <config-file>]
+```
+
+* `-d`: Add this flag to make the command have a dry-run. No resources will be deleted.
+* `-c`: Specify a config file for IDs/names of resources to be saved from deletion. The tool will automatically look for a file called `ibmcloud-nuke` in the local directory.
+
+## Using the CLI
+
+1. Clone the repo.
+
+   ```bash
+   git clone
+   ```
+
+1. Log into IBM Cloud.
+
+   ```bash
+   ibmcloud login
+   ```
+
+1. Run the CLI.
+
+   Perform a dry run:
+
+   ```bash
+   ./main.sh -d
+   ```
+
+   Delete all resources:
+
+   ```bash
+   ./main.sh
+   ```
 
 ## TODO
 
-1. Support for a list of exemptions. Ideally this would be in the form of a config file that has a bunch of ids/names that will be saved from deletion.
+1. Support for a list of exemptions. Ideally this would be in the form of a config file (`ibmcloud-nuke`) that has a bunch of ids/names that will be saved from deletion.
 
-2. A global `dry-run` flag that instead of deleting artifacts it prints which ones will be deleted.
+2. The project needs support for deleting the following types of resources:
 
-3. The project still needs support for deleting the following types of resources
-
-   * Schematics
-   * Satellite locations
-   * Developer Tools (toolchains)
-   * Gen2 VPC
-   * VMware solutions
+   * [Schematics Workspaces](https://cloud.ibm.com/docs/schematics?topic=schematics-schematics-cli-reference#schematics-workspace-delete)
+   * [Developer Tools (toolchains)](https://cloud.ibm.com/docs/cli?topic=cli-idt-cli#toolchains)
    * [Reclamations](https://cloud.ibm.com/docs/account?topic=account-resource-reclamation)
-   * API keys
-   * ... more IAM/account bits
+   * VMware solutions

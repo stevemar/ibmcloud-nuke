@@ -24,7 +24,7 @@
 # ibmcloud target -g <resource-group>
 
 
-usage() { echo "Usage: $0 [-d] [-c <string>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-d] [-c <config-file>]" 1>&2; exit 1; }
 
 DRY_RUN=''
 CONFIG_FILE=''
@@ -149,6 +149,28 @@ ibmcloud fn namespace list | tail -n+3 | awk -F '  +' '{print $1}' | while read 
     echo "${name}"
     if [ "${DRY_RUN}" == 0 ]; then
         ibmcloud fn namespace delete "${name}"
+    fi
+done
+
+# satellite locations (cannot contain a space)
+echo "================================="
+echo "Satellite locations: "
+echo "================================="
+ibmcloud sat location ls | tail -n+4 | while read -r name rest_of_cmd; do
+    echo "${name}"
+    if [ "${DRY_RUN}" == 0 ]; then
+        ibmcloud sat location rm --location "${name}" -f
+    fi
+done
+
+# Virtual Private Clouds (VPCs) (cannot contain a space)
+echo "================================="
+echo "Virtual Private Clouds: "
+echo "================================="
+ibmcloud is vpcs | tail -n+3 | while read -r id rest_of_cmd; do
+    echo "${id}"
+    if [ "${DRY_RUN}" == 0 ]; then
+        ibmcloud is vpcd "${id}" -f
     fi
 done
 

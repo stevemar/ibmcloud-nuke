@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.7
+
+* Switched to do a dry-run by default. The user will now have to use `-n` to actually delete resources.
+
 ## 0.0.6
 
 * Add support to preserve resources in a config file. By default the script will read from `.ibmcloud-nuke`.

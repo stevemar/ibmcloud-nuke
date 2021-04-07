@@ -1,6 +1,15 @@
 # ibmcloud-nuke
 
-The goal of this project is to delete all resources in your IBM Cloud account, _with great conviction and impunity_. 😠 (To save you from charges) 💰
+Remove all resources from an IBM Cloud account.
+
+## Caution!
+
+Be aware that *IBM Cloud Nuke* is a very destructive tool, be very careful while using it. Otherwise you might delete production data. **Do NOT run this application on an IBM Cloud account where you cannot afford to lose all resources.**
+
+Some safety precautions have been put in place.
+
+1. By default *IBM Cloud Nuke* only lists all nukeable resources. You need to add `-n` flag to actually delete resources.
+1. A config file can be used to specify names and IDs of resources to skip over.
 
 The project itself is just a shell script that is required be run by an authenticated IBM Cloud user. The shell script will find and delete the following resources:
 
@@ -19,10 +28,10 @@ The project itself is just a shell script that is required be run by an authenti
 ## CLI options
 
 ```bash
-main.sh [-d] [-c <path-to-config-file>]
+main.sh [-n] [-c <path-to-config-file>]
 ```
 
-* `-d`: Add this flag to make the command have a dry-run. No resources will be deleted.
+* `-n`: Specify "no dry run". Resources will be deleted.
 * `-c`: Specify a config file for IDs/names of resources to be saved from deletion. The tool will automatically look for a file called `ibmcloud-nuke` in the local directory.
 
 ## Using the CLI
@@ -44,13 +53,13 @@ main.sh [-d] [-c <path-to-config-file>]
    Perform a dry run:
 
    ```bash
-   ./main.sh -d
+   ./main.sh
    ```
 
    Delete all resources (will skip over any resorces found in `.ibmcloud-nuke`):
 
    ```bash
-   ./main.sh
+   ./main.sh -n
    ```
 
    Delete all resources but skip resources list in `myfile.txt`:

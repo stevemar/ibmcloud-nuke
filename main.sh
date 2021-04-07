@@ -24,15 +24,15 @@
 # ibmcloud target -g <resource-group>
 
 
-usage() { echo "Usage: $0 [-d] [-c <config-file>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-n] [-c <config-file>]" 1>&2; exit 1; }
 
-DRY_RUN=''
+NO_DRY_RUN=''
 CONFIG_FILE=''
-while getopts "dc:" o; do
+while getopts "nc:" o; do
     case "${o}" in
-        d)
-            d=${OPTARG}
-            DRY_RUN=1
+        n)
+            n=${OPTARG}
+            NO_DRY_RUN=1
             ;;
         c)
             c=${OPTARG}
@@ -57,16 +57,16 @@ else
     echo "Attempting to use config file at default location: $CONFIG_FILE"
 fi
 
-if [ "${DRY_RUN}" ]; then
-    echo "Dry run flag (-d) found. Will NOT delete any resources."
-    DRY_RUN=1
+if [ "${NO_DRY_RUN}" ]; then
+    echo "The (-n) flag was found. Will begin to delete all resources."
+    NO_DRY_RUN=1
 else
-    echo "No dry run flag (-d) found. Will begin to delete all resources."
-    DRY_RUN=0
+    echo "No (-n) flag found. Will NOT delete any resources."
+    NO_DRY_RUN=0
 fi
 
 echo "================================="
-echo "DRY_RUN = ${DRY_RUN}"
+echo "NO_DRY_RUN = ${NO_DRY_RUN}"
 echo "CONFIG_FILE = ${CONFIG_FILE}"
 echo "================================="
 
@@ -87,7 +87,7 @@ ibmcloud ks clusters -q | tail -n+2 | while read -r name rest_of_cmd ; do
     echo "${name}"
     check_config_file "${name}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud ks cluster rm -f -c ${name}
     fi
 
@@ -101,7 +101,7 @@ ibmcloud cr namespaces | tail -n+4 | while read -r name rest_of_cmd ; do
     echo "${name}"
     check_config_file "${name}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud cr namespace-rm -f ${name}
     fi
 done
@@ -114,7 +114,7 @@ ibmcloud dev list | tail -n+8 | while read -r name rest_of_cmd ; do
     echo "${name}"
     check_config_file "${name}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud dev delete -f ${name}
     fi
 done
@@ -127,7 +127,7 @@ ibmcloud resource service-instances | tail -n+4 | awk -F '  +' '{print $1}' | wh
     echo "${name}"
     check_config_file "${name}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud resource service-instance-delete -f --recursive "${name}"
     fi
 done
@@ -140,7 +140,7 @@ ibmcloud sl hardware list | grep -v 'kube-' | tail -n+2 | while read -r id rest_
     echo "${id}"
     check_config_file "${id}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud sl hardware cancel -f ${id}
     fi
 done
@@ -153,7 +153,7 @@ ibmcloud sl vs list | grep -v 'kube-' | tail -n+2 | while read -r id rest_of_cmd
     echo "${id}"
     check_config_file "${id}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud sl vs cancel -f ${id}
     fi
 done
@@ -166,7 +166,7 @@ ibmcloud ce project list | tail -n+5 | while read -r name rest_of_cmd ; do
     echo "${name}"
     check_config_file "${name}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud ce project delete -f --name ${name}
     fi
 done
@@ -179,7 +179,7 @@ ibmcloud fn namespace list | tail -n+3 | awk -F '  +' '{print $1}' | while read 
     echo "${name}"
     check_config_file "${name}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud fn namespace delete "${name}"
     fi
 done
@@ -192,7 +192,7 @@ ibmcloud sat location ls | tail -n+4 | while read -r name rest_of_cmd; do
     echo "${name}"
     check_config_file "${name}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud sat location rm --location "${name}" -f
     fi
 done
@@ -205,7 +205,7 @@ ibmcloud is vpcs | tail -n+3 | while read -r id rest_of_cmd; do
     echo "${id}"
     check_config_file "${id}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud is vpcd "${id}" -f
     fi
 done
@@ -218,7 +218,7 @@ ibmcloud iam api-keys | tail -n+4 | grep -v 'Do not delete' | while read -r name
     echo "${name}"
     check_config_file "${name}"
 
-    if [ "${DRY_RUN}" == 0 ]; then
+    if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud iam api-key-delete ${name}
     fi
 done

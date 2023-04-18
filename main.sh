@@ -106,18 +106,19 @@ ibmcloud cr namespaces | tail -n+4 | while read -r name rest_of_cmd ; do
     fi
 done
 
-# apps
-echo "================================="
-echo "Applications: "
-echo "================================="
-ibmcloud dev list | tail -n+8 | while read -r name rest_of_cmd ; do
-    echo "${name}"
-    check_config_file "${name}"
+## IBM Cloud CLI Developer tools are deprecated and end-of-support 31st March, 2023
+# # apps
+# echo "================================="
+# echo "Applications: "
+# echo "================================="
+# ibmcloud dev list | tail -n+8 | while read -r name rest_of_cmd ; do
+#     echo "${name}"
+#     check_config_file "${name}"
 
-    if [ "${NO_DRY_RUN}" == 1 ]; then
-        ibmcloud dev delete -f ${name}
-    fi
-done
+#     if [ "${NO_DRY_RUN}" == 1 ]; then
+#         ibmcloud dev delete -f ${name}
+#     fi
+# done
 
 # services - use awk here as the service name can include spaces
 echo "================================="
@@ -157,6 +158,32 @@ ibmcloud sl vs list | grep -v 'kube-' | tail -n+2 | while read -r id rest_of_cmd
         ibmcloud sl vs cancel -f ${id}
     fi
 done
+
+# File volumes
+echo "================================="
+echo "Classic File Volumes: "
+echo "================================="
+ibmcloud sl file volume-list | tail -n+2 | while read -r id rest_of_cmd ; do
+    echo "${id}"
+    check_config_file "${id}"
+            
+    if [ "${NO_DRY_RUN}" == 1 ]; then
+        ibmcloud sl file volume-cancel --immediate -f ${id}
+    fi      
+done   
+
+# Block volumes
+echo "================================="
+echo "Classic Block Volumes: "
+echo "================================="
+ibmcloud sl block volume-list | tail -n+2 | while read -r id rest_of_cmd ; do
+    echo "${id}"
+    check_config_file "${id}"
+            
+    if [ "${NO_DRY_RUN}" == 1 ]; then
+        ibmcloud sl block volume-cancel --immediate -f ${id}
+    fi      
+done   
 
 # code engine
 echo "================================="

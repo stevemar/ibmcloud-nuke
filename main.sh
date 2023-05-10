@@ -224,6 +224,49 @@ ibmcloud sat location ls | tail -n+4 | while read -r name rest_of_cmd; do
     fi
 done
 
+# Virtual Private Cloud VM (VSI) (cannot contain a space)
+echo "================================="
+echo "VPC VSI: "
+echo "================================="
+ibmcloud is ins | tail -n+3 | while read -r id rest_of_cmd; do
+    echo "${id}"
+    check_config_file "${id}"
+
+    if [ "${NO_DRY_RUN}" == 1 ]; then
+        ibmcloud is ind "${id}" -f
+    fi
+done
+
+# Virtual Private Cloud subnets (cannot contain a space)
+echo "================================="
+echo "VPC Subnets "
+echo "================================="
+ibmcloud is subnets | tail -n+3 | while read -r id rest_of_cmd; do
+    echo "${id}"
+    check_config_file "${id}"
+
+    if [ "${NO_DRY_RUN}" == 1 ]; then
+        pgwid=$(ibmcloud is subnet-public-gateway "${id}" --output json | jq -r ".id")
+        if [ "${pgwid}" ]; then
+          ibmcloud is subnet-pubgwd "${id}" -f
+        fi
+        ibmcloud is subnetd "${id}" -f
+    fi
+done
+
+# Virtual Private Cloud public gateway (cannot contain a space)
+echo "================================="
+echo "VPC Public Gateways "
+echo "================================="
+ibmcloud is pubgws | tail -n+3 | while read -r id rest_of_cmd; do
+    echo "${id}"
+    check_config_file "${id}"
+
+    if [ "${NO_DRY_RUN}" == 1 ]; then
+        ibmcloud is pubgwd "${id}" -f
+    fi
+done
+
 # Virtual Private Clouds (VPCs) (cannot contain a space)
 echo "================================="
 echo "Virtual Private Clouds: "
@@ -234,6 +277,19 @@ ibmcloud is vpcs | tail -n+3 | while read -r id rest_of_cmd; do
 
     if [ "${NO_DRY_RUN}" == 1 ]; then
         ibmcloud is vpcd "${id}" -f
+    fi
+done
+
+# Virtual Private Cloud Block Storage (cannot contain a space)
+echo "================================="
+echo "VPC Block Storage "
+echo "================================="
+ibmcloud is vols | tail -n+3 | while read -r id rest_of_cmd; do
+    echo "${id}"
+    check_config_file "${id}"
+
+    if [ "${NO_DRY_RUN}" == 1 ]; then
+        ibmcloud is vold "${id}" -f
     fi
 done
 

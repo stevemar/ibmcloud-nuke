@@ -19,11 +19,17 @@ The project itself is just a shell script that is required be run by an authenti
 * Services (like Cloudant, Watson services, Object Storage (and their underlying buckets), etc)
 * Classic Baremetal servers
 * Classic Virtual servers
+* Classic File and Block volumes
 * Code Engine projects (and their underlying jobs)
 * Cloud Functions Namespaces (and their underlying actions)
 * API keys (excluding ones requires for managing Kubernetes clusters)
 * Satellite locations
-* Gen2 VPCs
+* VPC VSI
+* VPC Subnets and Public Gateways
+* VPC Block Storage
+* VPCs
+
+Sometimes this script will throw some errors as there is no delay between requests to remove resources which may have an upstream dependency (ex: a block volume for a VM). This may require a second (or third?) execution of the script so that dependencies are cleared before all resource modules succeed in the removals.
 
 ## CLI options
 
